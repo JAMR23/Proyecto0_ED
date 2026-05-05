@@ -1,16 +1,14 @@
 #pragma once
-#include <stdexcept>
 #include <iostream>
 #include "PriorityQueue.h"
 #include "Pair.h"
 #include "MinHeap.h"
 
-using std::runtime_error;
 
 template <typename E>
 class HeapPriorityQueue : public PriorityQueue<E> {
 private:
-	MinHeap<Pair<int, E>> pairs;
+	MinHeap<Pair<int, E>>* pairs;
 
 
 public:

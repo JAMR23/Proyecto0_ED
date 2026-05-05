@@ -44,10 +44,10 @@ private:
         return leftChild(pos);
     }
     void siftDown(int pos) {
-        while (!isLeaf(pos) && elements[minChild(pos)] < elements[leftChild(pos)]) {
-            int minPos = minChild(pos);
-            swap(elements[pos], minChild(elements[pos]));
-            pos = minChild(pos);
+        while (!isLeaf(pos) && elements[pos] >= elements[minChild(pos)]) {
+            int mChild = minChild(pos);
+            swap(pos, mChild);
+            pos = mChild;
         }
     }
 
@@ -96,6 +96,7 @@ public:
         return size == 0;
     }
     void print() {
+        cout << "[ ";
         for (int i = 0; i < size; i++) {
             cout << elements[i];
             if (i != size - 1)
