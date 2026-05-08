@@ -40,8 +40,8 @@ public:
 	}
 
 	//Agrega el tiquete a la cola de prioridad del área
-	void agregarTiquete(Tiquete* tiquete, int prioridad) {
-		cola.insert(tiquete, prioridad);
+	void agregarTiquete(Tiquete* tiquete) {
+		cola.insert(tiquete, tiquete->prioridad);		//Modificada para que solo necesite tiquete como parametro
 	}
 
 	//Extrae el tiquete con mayor prioridad (menor número)
@@ -69,6 +69,13 @@ public:
 
 	Ventanilla* getVentanilla(int i) {
 		return ventanillas[i];
+	}
+
+	int getCanTiquetes() {		//agregado
+		return cola.getSize();
+	}
+	HeapPriorityQueue<Tiquete*>* getCola() {		//agregado
+		return &cola;
 	}
 
 	int tiquetesDispensados = 0;

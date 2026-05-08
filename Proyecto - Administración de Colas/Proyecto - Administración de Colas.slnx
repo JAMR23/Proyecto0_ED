@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Proyecto - Administración de Colas.vcxproj" />
+  <Project Path="Proyecto - Administración de Colas.vcxproj" Id="dde964e9-a410-4d3b-a9b7-2da8a51696d0" />
 </Solution>

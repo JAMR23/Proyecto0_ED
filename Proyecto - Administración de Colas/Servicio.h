@@ -16,7 +16,7 @@ private:
     string descripcion;
     int prioridad; // 
     string codArea;
-    int contador; // 
+    //Eliminado atributo contador, no se usaba
 
 public:
     //Constructor
@@ -24,16 +24,16 @@ public:
         this->descripcion = descripcion;
         this->codArea = codArea;
         this->prioridad = prioridad;
-     
+
     }
     ~Servicio() {};
     // getters
     //se maneja diferente
-    string getDescripcion() const { 
-        return descripcion; 
+    string getDescripcion() const {
+        return descripcion;
     }
-    int agregar() { 
-        return prioridad; 
+    int agregar() {
+        return prioridad;
     }
     string getCodArea() {
         return codArea;

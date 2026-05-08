@@ -10,7 +10,7 @@ using std::string;
 
 class Tiquete {
 public:
-	string codigo;			//ej: C1
+	string codigo;			//ej: C100
 	int prioridad;			//PT = PU * 10 + PS	
 	time_t horaSolicitud;	//solicita tiquete
 	time_t horaAtencion;	//tiquete atendido
@@ -32,9 +32,9 @@ public:
 
 	//imprime con formato el tiquete
 	friend ostream& operator<<(ostream& os, const Tiquete& t) {
-		os << "Código: " << t.codigo
+		os << "( Código: " << t.codigo
 			<< "-- Prioridad: " << t.prioridad
-			<< "-- Hora: " << ctime(&t.horaSolicitud);
+			<< "-- Hora: " << ctime(&t.horaSolicitud) << " )";
 		return os;
 	}
 
