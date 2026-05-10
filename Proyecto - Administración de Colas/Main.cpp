@@ -1,7 +1,7 @@
 /*
-* @file Interfaz.cpp
+* @file Main.cpp
 * @author Jose Marin
-* @date 2026-05-08
+* @date 2026-05-10
 * @brief Programa principal, muestra la interfaz del sistema e interactúa con el usuario.
 */
 
@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include "Pair.h"
 #include "HeapPriorityQueue.h"
+#include "Usuario.h"
 #include "Servicio.h"
 #include "Area.h"
 #include "Ventanilla.h"
@@ -27,18 +28,21 @@ using std::exception;
 using std::runtime_error;
 
 
-int main()
+int main1()
 {
     cout << "Fuera de servivio...\n";
     return 0;
 }
 
-int main1() {
+int main() {
     //Inicializar y definir las listas y variables.
-    LinkedList<Pair<int, string>>* usuarios = new LinkedList<Pair<int, string>>();
-    LinkedList<Servicio>* servicios = new LinkedList<Servicio>();
-    LinkedList<Area>* areas = new LinkedList<Area>();
-    int consec = 100;
+    LinkedList<Usuario*>* usuarios = new LinkedList<Usuario*>();
+    LinkedList<Servicio*>* servicios = new LinkedList<Servicio*>();
+    LinkedList<Area*>* areas = new LinkedList<Area*>();
+    int consecutivo = 100;
+    int tiempoTotalTiquetes = 0;
+    int totalTiquetesAtendidos = 0;
+    string x;
     bool c = true;
     while (c) {
         for (int i = 0; i < 50; ++i) {
@@ -59,194 +63,423 @@ int main1() {
         cout << ": : \\_,_/\\__/  \\___/\\___/_/\\_,_/___/                            : :" << endl;
         cout << ": :                                                             : :" << endl;
         cout << "'*:.............................................................:*'" << endl;
-    }
 
-    cout << "Menú Principal: " << endl
-        << "1. Ver estado de las colas." << endl
-        << "2. Generar tiquete." << endl
-        << "3. Atender tiquete." << endl
-        << "4. Administración." << endl
-        << "5. Ver estadisticas del sistema." << endl
-        << "6. Salir." << endl;
-    string opt;
-    getline(cin, opt);
 
-    try {
-        switch (stoi(opt)) {
-        case 1:
-                
-            areas->goToStart();
-            HeapPriorityQueue<Tiquete*>* q = areas->getElement().getCola();
-            for (int i = 0; i < areas->getSize(); i++) {
-                cout << "Area " << areas->getElement().getCodigo() << ": " << areas->getElement().getDescripcion() << endl;
-                cout << "Cantidad de ventanillas: " << areas->getElement().getCantidadVentanillas() << endl;
-                //Imprimir codigos de tiquetes presentes en cada cola
-                q->print();
-                //Las ventanillas muestran el numero del ultimo tiquete atendido
-                for (int j = 0; j < areas->getElement().getCantidadVentanillas(); j++) {
-                    Ventanilla* vent = areas->getElement().getVentanilla(j);
-                    cout << "Ventanilla " << vent->getNombre() << ": " << endl
-                        << "Ultimo tiquete: " << vent->getTiqueteActual() << endl;
+        cout << "Menú Principal: " << endl
+            << "1. Ver estado de las colas." << endl
+            << "2. Generar tiquete." << endl
+            << "3. Atender tiquete." << endl
+            << "4. Administración." << endl
+            << "5. Ver estadisticas del sistema." << endl
+            << "6. Salir." << endl;
+        string opt;
+        getline(cin, opt);
+
+        try {
+            switch (stoi(opt)) {
+            case 1:
+
+                areas->goToStart();
+                for (int i = 0; i < areas->getSize(); i++) {
+                    cout << "Area " << areas->getElement()->getCodigo() << ": " << areas->getElement()->getDescripcion() << endl;
+                    cout << "Cantidad de ventanillas: " << areas->getElement()->getCantidadVentanillas() << endl;
+                    //Imprimir codigos de tiquetes presentes en cada cola
+                    areas->getElement()->getCola()->print();
+                    
+                    //Las ventanillas muestran el numero del ultimo tiquete atendido
+                    for (int j = 0; j < areas->getElement()->getCantidadVentanillas(); j++) {
+                        Ventanilla* vent = areas->getElement()->getVentanilla(j);
+                        cout << "Ventanilla " << vent->getNombre() << ": " << endl
+                            << "Ultimo tiquete: " << vent->getTiqueteActual() << endl;
+                    }
+                    areas->next();
                 }
-                areas->next();
+                cout << "Presione Enter para volver al menú principal...";
+                cin.ignore(1000, '\n');
+                cin.get();
+                cin.ignore(1000, '\n');
+                break;
+            case 2:
+                do {
+                    cout << "1. Seleccionar tipo de usuario y servicio." << endl
+                        << "2. Regresar." << endl;
+                    getline(cin, opt);
+                    if (opt == "1") {
+                        //Mostrar lista de tipos de usuario, selecciona uno
+                        usuarios->goToStart();
+                        cout << "Elija un tipo de usuario:" << endl;
+                        for (int i = 0; i < usuarios->getSize(); i++) {
+                            cout << i + 1 << ". " << usuarios->getElement()->getNombre();
+                            usuarios->next();
+                        }
+                        getline(cin, x);
+                        usuarios->goToPos(stoi(x) - 1);
+                        int pu = usuarios->getElement()->getPrioridad();
+                        //Mostrar lista de servicios (orden en el que se configuró) selecciona uno
+                        servicios->goToStart();
+                        cout << "Elija un servicio:" << endl;
+                        for (int i = 0; i < servicios->getSize(); i++) {
+                            cout << i + 1 << ". " << servicios->getElement()->getDescripcion();
+                            servicios->next();
+                        }
+                        getline(cin, x);
+                        servicios->goToPos(stoi(x) - 1);
+                        int ps = servicios->getElement()->agregar();
+                        //Generar tiquete, agregarlo a la lista y mostrar sus datos.
+                        Tiquete* t = new Tiquete(servicios->getElement()->getCodArea() + to_string(consecutivo), pu * 10 + ps);
+                        consecutivo++;
+                        string cod = servicios->getElement()->getCodArea();
+                        areas->goToStart();
+                        for (int i = 0; i < areas->getSize(); i++) {
+                            if (areas->getElement()->getCodigo() == cod)
+                                areas->getElement()->agregarTiquete(t);
+                        }
+                        cout << "Tiquete " << t << " agregado." << endl
+                            << "Presione enter para volver al menú principal...";
+                        cin.ignore(1000, '\n');
+                        cin.get();
+                        cin.ignore(1000, '\n');
+                    }
+                    else if (opt == "2")
+                        ; 
+                    else
+                        cout << "ERROR: Opción no valida.";
+                } while (opt != "2");
+                break;
+            case 3:
+                //Solicita area y numero de ventanilla
+                areas->goToStart();
+                cout << "Elija un area:" << endl;
+                for (int i = 0; i < areas->getSize(); i++) {
+                    cout << i + 1 << ". " << areas->getElement()->getDescripcion();
+                    areas->next();
+                }
+                getline(cin, x);
+                areas->goToPos(stoi(x) - 1);
+                //Revisar si la cola del area está vacía
+                if (areas->getElement()->colaVacia())
+                    cout << "No hay ususarios en espera.";
+                //ventanilla
+                else {
+                    cout << "Elija una ventanilla:" << endl;
+                    for (int i = 0; i < areas->getElement()->getCanTiquetes(); i++) {
+                        cout << i + 1 << ". " << areas->getElement()->getVentanilla(i)->getNombre() << endl;
+                    }
+                    getline(cin, x);
+                    //elimina el tiquete de esa cola y lo asigna como tiquete atendido en la ventanilla
+                    Tiquete* t = areas->getElement()->extraerTiquete();
+                    areas->getElement()->getVentanilla(stoi(x))->atenderTiquete(t);
+                    //actualizar datos necesarios para las estadisticas
+                    t->horaAtencion = time(nullptr);
+                    tiempoTotalTiquetes += t->tiempoEspera();
+                    totalTiquetesAtendidos++;
+                }
+                cout << "Tiquete atendido." << endl << "Presione enter para volver al menú principal...";
+                cin.ignore(1000, '\n');
+                cin.get();
+                cin.ignore(1000, '\n');
+                break;
+            case 4:
+                do {
+                    cout << "1. Tipos de usuario." << endl
+                        << "2. Areas." << endl
+                        << "3. Servicios disponibles." << endl
+                        << "4. Limpiar colas y estadísticas." << endl
+                        << "5. Regresar." << endl;
+                    getline(cin, opt);
+                    switch (stoi(opt)) {
+                    case 1:
+                        do {
+                            cout << "1. Agregar." << endl
+                                << "2. Eliminar." << endl
+                                << "3. Regresar." << endl;
+                            getline(cin, opt);
+                            if (opt == "1") {
+                                //agregar tipo de usuario nuevo
+                                string nombre;
+                                string prioridad;
+                                cout << "Escriba el nombre del tipo de usuario: ";
+                                getline(cin, nombre);
+                                cout << "Escriba la prioridad: ";
+                                getline(cin, prioridad);
+                                Usuario* u = new Usuario(stoi(prioridad), nombre);
+                                usuarios->goToStart();
+                                if (usuarios->getSize() == 0) {
+                                    usuarios->append(u);
+                                }
+                                else {
+                                    bool insert = false;
+                                    for (int i = 0; i < usuarios->getSize(); ++i) {
+                                        if (u->getPrioridad() < usuarios->getElement()->getPrioridad()) {
+                                            usuarios->insert(u);
+                                            insert = true;
+                                            break;
+                                        }
+                                        usuarios->next();
+                                    }
+                                    if (!insert) {
+                                        usuarios->append(u);
+                                    }
+                                }
+                                cout << "Usuario añadido." << endl << endl;
+                            }
+                            else if (opt == "2") {
+                                // eliminar un tipo de usuario y los tiquetes que lo tuvieran en cada cola de las areas
+                                usuarios->goToStart();
+                                cout << "Elija un tipo de usuario:" << endl;
+                                for (int i = 0; i < usuarios->getSize(); i++) {
+                                    cout << i + 1 << ". " << usuarios->getElement()->getNombre();
+                                    usuarios->next();
+                                }
+                                getline(cin, x);
+                                usuarios->goToPos(stoi(x) - 1);
+                                usuarios->remove();
+                                cout << "Usuario " << usuarios->remove()
+                                    << " eliminado." << endl << endl;
+                            }
+                            else if (opt == "3")
+                                ;
+                            else
+                                cout << "ERROR: Opción no valida.";
+                        } while (opt != "3");
+                        break;
+                    case 2:
+                        do {
+                            cout << "1. Agregar." << endl
+                                << "2. Modificar cantidad de ventanillas." << endl
+                                << "3. Eliminar." << endl
+                                << "4. Regresar." << endl;
+                            getline(cin, opt);
+                            if (opt == "1") {
+                                ; //agregar area nueva
+                                string codigo;
+                                string nombre;
+                                string cVent;
+                                cout << "Escriba el nombre: ";
+                                getline(cin, nombre);
+                                cout << "Escriba el codigo: ";
+                                getline(cin, codigo);
+                                cout << "Escriba la cantidad de ventanas: ";
+                                getline(cin, cVent);
+                                Area* a = new Area(codigo, nombre, stoi(cVent));
+                                areas->append(a);
+                                cout << "Area añadida." << endl << endl;
+
+                            }
+                            else if (opt == "2") {
+                                ; //pedir al usuario un area, mostrar su cant de ventanillas y pedir un numero
+                                areas->goToStart();
+                                cout << "Elija un area:" << endl;
+                                for (int i = 0; i < areas->getSize(); i++) {
+                                    cout << i + 1 << ". " << areas->getElement()->getDescripcion();
+                                    areas->next();
+                                }
+                                getline(cin, x);
+                                areas->goToPos(stoi(x) - 1);
+                                cout << "El area tiene " << areas->getElement()->getCantidadVentanillas() << " ventanillas." << endl;
+                                cout << "Escriba la nueva cantidad: ";
+                                getline(cin, x);
+                                //crear automaticamente la lista (array) de ventanillas con sus codigos
+                                Ventanilla** v = new Ventanilla * [stoi(x)];
+                                for (int i = 0; i < stoi(x); i++) {
+                                    if (i < areas->getElement()->getCantidadVentanillas()) {
+                                        v[i] = areas->getElement()->getVentanilla(i);
+                                    }
+                                }
+                                //Borrar la lista de ventanillas del area, asignarle v y asignnar x a la cantVentanillas
+                                areas->getElement()->delVentanillas();
+                                areas->getElement()->asignVentanillas(v, stoi(x));
+                                cout << "Ventanillas modificadas." << endl << endl;
+                            }
+                            else if (opt == "3") {
+                                // Elejir area a eliminar
+                                areas->goToStart();
+                                cout << "Elija un area:" << endl;
+                                for (int i = 0; i < areas->getSize(); i++) {
+                                    cout << i + 1 << ". " << areas->getElement()->getDescripcion();
+                                    areas->next();
+                                }
+                                getline(cin, x);
+                                areas->goToPos(stoi(x) - 1);
+                                // Solicitar confirmacion mostrando la lista de servicios que se eliminarán
+                                servicios->goToStart();
+                                cout << "¡ADVERTENCIA! Se eliminarán también los servicios de esta area: " << endl;
+                                for (int i = 0; i < servicios->getSize(); i++) {
+                                    if (servicios->getElement()->getCodArea() == areas->getElement()->getCodigo()) {
+                                        cout << servicios->getElement()->getDescripcion() << endl;
+                                    }
+                                }
+                                cout << "Desea continuar?(s/n): ";
+                                getline(cin, x);
+                                // Si escribe s, eliminar todos los servicios y el area con su cola y ventanillas, si no, cancela.
+                                if (x == "s") {
+                                    servicios->goToStart();
+                                    for (int i = 0; i < servicios->getSize(); i++) {
+                                        if (servicios->getElement()->getCodArea() == areas->getElement()->getCodigo()) {
+                                            servicios->remove();
+                                        }
+                                    }
+                                    string a = areas->getElement()->getDescripcion();
+                                    delete areas->remove();
+                                    cout << "Area " << a << " eliminada." << endl << endl;
+                                }
+                                else
+                                    cout << "Cancelando..." << endl << endl;
+                            }
+                            else if (opt == "4")
+                                ;
+                            else
+                                cout << "ERROR: Opción no valida.";
+                        } while (opt != "4");
+                        break;
+                    case 3:
+                        do {
+                            cout << "1. Agregar." << endl
+                                << "2. Eliminar." << endl
+                                << "3. Reordenar." << endl
+                                << "4. Regresar." << endl;
+                            getline(cin, opt);
+                            if (opt == "1") {
+                                //agregar servicio nuevo
+                                string codArea;
+                                string nombre;
+                                string prioridad;
+                                cout << "Escriba el nombre: ";
+                                getline(cin, nombre);
+                                cout << "Escriba el codigo de area: ";
+                                getline(cin, codArea);
+                                cout << "Escriba la prioridad: ";
+                                getline(cin, prioridad);
+                                Servicio* s = new Servicio(nombre, stoi(prioridad), codArea);
+                                servicios->append(s);
+                                cout << "Servicio añadido." << endl << endl;
+                            }
+                            else if (opt == "2") {
+                                //mostrar servicios disponibles y pedir uno para eliminarlo
+                                servicios->goToStart();
+                                cout << "Elija un servicio a eliminar:" << endl;
+                                for (int i = 0; i < servicios->getSize(); i++) {
+                                    cout << i + 1 << ". " << servicios->getElement()->getDescripcion();
+                                    servicios->next();
+                                }
+                                getline(cin, x);
+                                servicios->goToPos(stoi(x) - 1);
+                                //eliminar tiquetes del area correspondiente al servicio
+                                for (int i = 0; i < areas->getSize(); i++) {
+                                    if (areas->getElement()->getCodigo() == servicios->getElement()->getCodArea())
+                                        areas->getElement()->limpiarCola();
+                                }
+                                string s = servicios->getElement()->getDescripcion();
+                                delete servicios->remove();
+                                cout << "Servicio " << s << " y tiquetes de su area, eliminados." << endl << endl;
+                            }
+                            else if (opt == "3") {
+                                //pedir numero de servicio y nueva posición donde se insertará en la lista.
+                                servicios->goToStart();
+                                cout << "Elija un servicio a mover:" << endl;
+                                for (int i = 0; i < servicios->getSize(); i++) {
+                                    cout << i + 1 << ". " << servicios->getElement()->getDescripcion();
+                                    servicios->next();
+                                }
+                                getline(cin, x);
+                                servicios->goToPos(stoi(x) - 1);
+                                Servicio* temp = servicios->remove();
+                                cout << "Escriba la nueva posición del servicio en la lista (siendo 1 la primera posicion): ";
+                                getline(cin, x);
+                                servicios->goToPos(stoi(x) - 1);
+                                servicios->insert(temp);
+                                cout << "Orden de servicios actualizado." << endl << endl;
+                            }
+                            else if (opt == "4")
+                                ;
+                            else
+                                cout << "ERROR: Opción no valida.";
+                        } while (opt != "4");
+                        break;
+                    case 4:
+                        // Clear todas las colas y reiniciar las estadisticas (no reinicia usuarios, servicios ni areas)
+                        consecutivo = 0;
+                        totalTiquetesAtendidos = 0;
+                        tiempoTotalTiquetes = 0;
+                        areas->goToStart();
+                        for (int i = 0; i < areas->getSize(); i++) {
+                            areas->getElement()->limpiarCola();
+                            areas->getElement()->reiniciarTiquetes();
+                            for (int j = 0; j < areas->getElement()->getCantidadVentanillas(); j++) {
+                                areas->getElement()->getVentanilla(j)->liberaVentanilla();
+                            }
+                        }
+                        servicios->goToStart();
+                        for (int i = 0; i < servicios->getSize(); i++) {
+                            servicios->getElement()->reiniciarTiquetes();
+                        }
+                        usuarios->goToStart();
+                        for (int i = 0; i < usuarios->getSize(); i++) {
+                            usuarios->getElement()->reiniciarTiquetes();
+                        }
+                        cout << "Estadisticas del sistema reiniciadas." << endl << endl;
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        cout << "ERROR: Opción no valida.";
+                        break;
+                    }
+                } while (opt != "5");
+                break;
+            case 5:
+                //imprimir estadisticas del sistema
+                cout << "Estadisticas del sistema:" << endl
+                    << "Tiempo promedio de espera: " << tiempoTotalTiquetes / totalTiquetesAtendidos << " segundos." << endl
+                    << "Tiquetes dispensados por area: " << endl;
+                areas->goToStart();
+                for (int i = 0; i < areas->getSize(); i++) {
+                    cout << areas->getElement()->getDescripcion() << ": " 
+                        << areas->getElement()->getTiquetesDisp() << " tiquetes. " << endl;
+                    areas->next();
+                }
+                cout << "Tiquetes atendidos por ventanilla: " << endl;
+                areas->goToStart();
+                for (int i = 0; i < areas->getSize(); i++) {
+                    for (int j = 0; j < areas->getElement()->getCantidadVentanillas(); i++) {
+                        cout << areas->getElement()->getVentanilla(j)->getNombre() << ": "
+                            << areas->getElement()->getVentanilla(j)->getTiquetesAtendidos() << " tiquetes. " << endl;
+                    }
+                    areas->next();
+                }
+                servicios->goToStart();
+                cout << "Tiquetes solicitados por servicio: " << endl;
+                for (int i = 0; i < servicios->getSize(); i++) {
+                    cout << servicios->getElement()->getDescripcion() << ": "
+                        << servicios->getElement()->getTiquetesSol() << " tiquetes. " << endl;
+                    servicios->next();
+                }
+                usuarios->goToStart();
+                cout << "Tiquetes emitidos por usuario: " << endl;
+                for (int i = 0; i < usuarios->getSize(); i++) {
+                    cout << usuarios->getElement()->getNombre() << ": "
+                        << usuarios->getElement()->getTiquetesEmitidos() << " tiquetes. " << endl;
+                    usuarios->next();
+                }
+                cout << "Presione enter para volver al menú principal...";
+                cin.ignore(1000, '\n');
+                cin.get();
+                cin.ignore(1000, '\n');
+                break;
+            case 6:
+                cout << "Cerrando el programa... ";
+                c = false;
+                cout << "Adios.";
+                break;
+            default:
+                cout << "ERROR: Opción no valida.";
+                break;
             }
-            cout << "Presione Enter para volver al menú principal...";
-            cin.ignore(1000, '\n');
-            cin.get();
-            cin.ignore(1000, '\n');
-            break;
-        case 2:
-            do {
-                cout << "1. Seleccionar tipo de usuario y servicio." << endl
-                    << "2. Regresar." << endl;
-                getline(cin, opt);
-                if (opt == "1") {
-                    //Mostrar lista de tipos de usuario, selecciona uno
-                    usuarios->goToStart();
-                    cout << "Elija un tipo de usuario:" << endl;
-                    for (int i = 0; i < usuarios->getSize(); i++) {
-                        cout << i + 1 << ". " << usuarios->getElement().value;
-                    }
-                    getline(cin, opt);
-                    usuarios->goToPos(stoi(opt) - 1);
-                    int pu = usuarios->getElement().key;
-                    //Mostrar lista de servicios (orden en el que se configuró) selecciona uno
-                    servicios->goToStart();
-                    cout << "Elija un servicio:" << endl;
-                    for (int i = 0; i < servicios->getSize(); i++) {
-                        cout << i + 1 << ". " << servicios->getElement().getDescripcion();
-                    }
-                    getline(cin, opt);
-                    servicios->goToPos(stoi(opt) - 1);
-                    int ps = servicios->getElement().agregar();
-                    //Generar, agregar a la lista y mostrar datos del tiquete
-                    Tiquete* t = new Tiquete(servicios->getElement().getCodArea() + to_string(consec), pu * 10 + ps);
-                    consec++;
-                    string cod = servicios->getElement().getCodArea();
-                    areas->goToStart();
-                    for (int i = 0; i < areas->getSize(); i++) {
-                        if (areas->getElement().getCodigo() == cod)
-                            areas->getElement().agregarTiquete(t);
-                    }
-                    cout << "Tiquete " << t << " agregado." << endl 
-                        << "Presione enter para volver al menú principal...";
-                    cin.ignore(1000, '\n');
-                    cin.get();
-                    cin.ignore(1000, '\n');
-                }
-                else if (opt == "2")
-                    ; //no hace nada lol (para que no imprima error si es 2)
-                else
-                    cout << "ERROR: Opción no valida.";
-            } while (opt != "2");
-            break;
-        case 3:
-            //Solicita area y numero de ventanilla
-            //if (lista de esa ventanilla->isEmpty())
-            //cout << "No hay usuarios en espera.";
-            //else, elimina el tiquete de esa cola y lo asigna como tiquete atendido en la ventanilla
-            //actualizar datos necesarios para las estadisticas
-            cout << "Tiquete atendido." << endl << "Presione enter para volver al menú principal...";
-            cin.ignore(1000, '\n');
-            cin.get();
-            cin.ignore(1000, '\n');
-            break;
-        case 4:
-            do {
-                cout << "1. Tipos de usuario." << endl
-                    << "2. Areas." << endl
-                    << "3. Servicios disponibles." << endl
-                    << "4. Limpiar colas y estadísticas." << endl
-                    << "5. Regresar." << endl;
-                getline(cin, opt);
-                switch (stoi(opt)) {
-                case 1:
-                    do {
-                        cout << "1. Agregar." << endl
-                            << "2. Eliminar." << endl
-                            << "3. Regresar." << endl;
-                        getline(cin, opt);
-                        if (opt == "1") {
-                            ; //agregar tipo de usuario nuevo
-                        }
-                        else if (opt == "2") {
-                            ; // eliminar un tipo de usuario y los tiquetes que lo tuvieran en cada cola de las areas
-                        }
-                        else if (opt == "3")
-                            ;
-                        else
-                            cout << "ERROR: Opción no valida.";
-                    } while (opt != "3");
-                    break;
-                case 2:
-                    do {
-                        cout << "1. Agregar." << endl
-                            << "2. Modificar cantidad de ventanillas." << endl
-                            << "3. Eliminar." << endl
-                            << "4. Regresar." << endl;
-                        getline(cin, opt);
-                        if (opt == "1") {
-                            ; //agregar area nueva
-                        }
-                        else if (opt == "2") {
-                            ; //pedir al usuario un area, mostrar su cant de ventanillas y pedir un numero
-                            //crear automaticamente la lista de ventanillas con sus codigos
-                        }
-                        else if (opt == "3")
-                            ; // eliminar el area elimina tambien servicios y ventanillas con todos los tiquetes que tengan en cola
-                            // debe solicitar confiramación mostrando la lista de servicios que se eliminarían.
-                        else if (opt == "4")
-                            ;
-                        else
-                            cout << "ERROR: Opción no valida.";
-                    } while (opt != "4");
-                    break;
-                case 3:
-                    do {
-                        cout << "1. Agregar." << endl
-                            << "2. Eliminar." << endl
-                            << "3. Reordenar." << endl
-                            << "4. Regresar." << endl;
-                        getline(cin, opt);
-                        if (opt == "1") {
-                            ; //agregar servicio nuevo
-                        }
-                        else if (opt == "2") {
-                            ; //mostrar servicios disponibles y pedir uno para eliminarlo
-                            // PREGUNTAR AL PROFE   Eliminar TODOS los tiquetes??
-                        }
-                        else if (opt == "3")
-                            ; //pedir numero de servicio y nueva posición donde se insertará en la lista.
-                        else if (opt == "4")
-                            ;
-                        else
-                            cout << "ERROR: Opción no valida.";
-                    } while (opt != "4");
-                    break;
-                case 4:
-                    // Clear todas las colas y reiniciar las estadisticas (no reinicia usuarios, servicios ni areas)
-                    break;
-                case 5:
-                    break;
-                default:
-                    cout << "ERROR: Opción no valida.";
-                }
-            } while (opt != "5");
-            break;
-        case 5:
-            //imprimir estadisticas del sistema (explicadas antes del menu)
-            break;
-        case 6:
-            cout << "Cerrando el programa... ";
-            c = false;
-            cout << "Adios.";
-            break;
+        }
+        //Faltan catch especificos
+        catch (const exception& e) {
+            cout << "ERROR: " << e.what() << endl;
         }
     }
-    //Faltan catch especificos
-    catch (const exception& e) {
-        cout << "ERROR: " << e.what() << endl;
-    }
-
     return 0;
 };

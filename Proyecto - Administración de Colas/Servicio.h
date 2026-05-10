@@ -16,6 +16,7 @@ private:
     string descripcion;
     int prioridad; // 
     string codArea;
+    int tiquetesSolicitados; //agregado
     //Eliminado atributo contador, no se usaba
 
 public:
@@ -24,6 +25,7 @@ public:
         this->descripcion = descripcion;
         this->codArea = codArea;
         this->prioridad = prioridad;
+        tiquetesSolicitados = 0;
 
     }
     ~Servicio() {};
@@ -33,10 +35,17 @@ public:
         return descripcion;
     }
     int agregar() {
+        tiquetesSolicitados++;
         return prioridad;
     }
     string getCodArea() {
         return codArea;
+    }
+    void reiniciarTiquetes() {
+        tiquetesSolicitados = 0;            //agregado
+    }
+    int getTiquetesSol() {
+        return tiquetesSolicitados;         //agregado
     }
     // Para imprimir
     friend ostream& operator<<(ostream& os, const Servicio& s) {

@@ -67,7 +67,7 @@ public:
         siftUp(size);
         size++;
     }
-    void first() {
+    E first() {
         if (size == 0)
             throw runtime_error("ERROR: Heap is empty.");
         return elements[0];

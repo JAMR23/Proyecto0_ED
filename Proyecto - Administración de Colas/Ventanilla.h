@@ -1,6 +1,7 @@
-// Autor: Indigo Sánchez
+// Autor: Indigo Sánchez, Jose Marin
 // Fecha: 2026-05-04
-// Descripción: Representa la ventanilla de atención dentro de un área que atiende tiquetes. Guarda el tiquete actual y los atendidos.
+// Descripción: Representa la ventanilla de atención dentro de un área
+//				que atiende tiquetes. Guarda el tiquete actual y los atendidos.
 
 #pragma once
 
@@ -16,7 +17,6 @@ private:
 	int tiquetesAtendidos;	//Contador de los tiquetes atendidos
 
 public:
-
 	Ventanilla(string nombre) {
 		this->nombre = nombre;
 		this->tiqueteActual = nullptr;
@@ -32,12 +32,11 @@ public:
 	void liberaVentanilla() {
 		tiqueteActual = nullptr;
 	}
-	
+
 	//Nombre de la ventanilla
 	string getNombre() {
 		return nombre;
 	}
-
 	Tiquete* getTiqueteActual() {
 		return tiqueteActual;
 	}

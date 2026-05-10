@@ -54,7 +54,7 @@ public:
 		if (current == tail)
 			throw runtime_error("ERROR: No current element.");
 		E res = current->next->element;
-		temp = current->next;
+		Node<E>* temp = current->next;
 		current->next = temp->next;
 		delete temp;
 		size--;
@@ -92,7 +92,7 @@ public:
 	}
 	void previous() {
 		if (current != head) {
-			new Node<E>* temp = head;
+			Node<E>* temp = head;
 			while (temp->next != current) {
 				temp = temp->next;
 			}
@@ -107,7 +107,7 @@ public:
 	}
 	int getPos() {
 		int pos = 0;
-		new Node<E>* temp = head;
+		Node<E>* temp = head;
 		while (temp != current) {
 			temp = temp->next;
 			pos++;
@@ -118,14 +118,14 @@ public:
 		return size;
 	}
 	void print() {
-		new Node<E>* temp = head->next;
+		Node<E>* temp = head->next;
 		cout << "[ ";
 		while (temp != nullptr) {
 			cout << temp->element;
 			if (temp == tail)
 				cout << " ";
-			else:
-			cout << ", ";
+			else
+				cout << ", ";
 			temp = temp->next;
 		}
 		cout << "]" << endl;
