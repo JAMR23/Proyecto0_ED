@@ -41,7 +41,7 @@ public:
 	~Area() {
 		delVentanillas();
 		while (!colaVacia()) {
-			Tiquete* t = cola.removeMin();
+			Tiquete* t = cola.removeMin(); 
 			delete t;
 		}
 	}
@@ -53,9 +53,8 @@ public:
 
 	//Extrae el tiquete con mayor prioridad (menor número)
 	Tiquete* extraerTiquete() {
-		Tiquete* t = cola.removeMin();
 		tiquetesDispensados++;
-		return t;
+		return cola.removeMin();
 	}
 
 	//Revisa si la cola está vacía
@@ -65,8 +64,6 @@ public:
 
 	//Libera memoria de ventanillas
 	void delVentanillas() {
-		for (int i = 0; i < cantidadVentanillas; i++)
-			delete ventanillas[i];
 		delete[] ventanillas;						
 		cantidadVentanillas = 0;
 	}

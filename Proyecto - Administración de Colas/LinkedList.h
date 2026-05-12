@@ -79,7 +79,7 @@ public:
 		current = tail;
 	}
 	void goToPos(int pos) {
-		if (pos > size or pos <= 0)
+		if (pos > size or pos < 0)
 			throw runtime_error("ERROR: Index out of bounds.");
 		current = head;
 		for (int i = 0; i != pos; i++) {
