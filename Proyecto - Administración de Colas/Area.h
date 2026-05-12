@@ -53,8 +53,9 @@ public:
 
 	//Extrae el tiquete con mayor prioridad (menor número)
 	Tiquete* extraerTiquete() {
-		return cola.removeMin();
+		Tiquete* t = cola.removeMin();
 		tiquetesDispensados++;
+		return t;
 	}
 
 	//Revisa si la cola está vacía
