@@ -1,5 +1,5 @@
 // Autor: Jose Marin
-// Fecha: 2026-05-10
+// Fecha: 2026-05-12
 // Descripción: Define la estructura de cada tipo de usuario creado.
 #pragma once
 
@@ -25,6 +25,11 @@ public:
 	//Reinicia la estadistica de tiqeutes
 	void reiniciarTiquetes() {
 		tiquetesEmitidos = 0;
+	}
+	//Aumenta el contador de tiquetes emitidos y devielvee la prioridad del tipo para colocarlo en la cola
+	int emitirTiquete() {
+		tiquetesEmitidos++;
+		return getPrioridad();
 	}
 
 	//Getters

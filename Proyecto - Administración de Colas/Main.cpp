@@ -1,7 +1,7 @@
 /*
 * @file Main.cpp
 * @author Jose Marin
-* @date 2026-05-10
+* @date 2026-05-12
 * @brief Programa principal, muestra la interfaz del sistema e interactúa con el usuario.
 */
 
@@ -125,7 +125,7 @@ int main() {
                             }
                             getline(cin, x);
                             usuarios->goToPos(stoi(x) - 1);
-                            int pu = usuarios->getElement()->getPrioridad();
+                            int pu = usuarios->getElement()->emitirTiquete();
                             //Mostrar lista de servicios (orden en el que se configuró) selecciona uno
                             servicios->goToStart();
                             cout << "Elija un servicio:" << endl;
@@ -448,7 +448,7 @@ int main() {
                         break;
                     case 4:
                         // Clear todas las colas y reiniciar las estadisticas (no reinicia usuarios, servicios ni areas)
-                        consecutivo = 0;
+                        consecutivo = 100;
                         totalTiquetesAtendidos = 0;
                         tiempoTotalTiquetes = 0;
                         areas->goToStart();
