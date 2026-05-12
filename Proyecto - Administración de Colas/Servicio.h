@@ -1,4 +1,7 @@
-//descripcion
+// Autor: Jessica Vargas
+// Fecha: 07/05/2026
+// Descripcion: Un servicio disponible en el sistema de administracion de colas. 
+
 #pragma once
 
 #include <stdexcept>
@@ -17,10 +20,9 @@ private:
     int prioridad; // 
     string codArea;
     int tiquetesSolicitados; //agregado
-    //Eliminado atributo contador, no se usaba
 
 public:
-    //Constructor
+    // Constructor: inicializa el servicio con su descripción, prioridad y código de área.
     Servicio(string descripcion, int prioridad, string codArea) {
         this->descripcion = descripcion;
         this->codArea = codArea;
@@ -30,20 +32,24 @@ public:
     }
     ~Servicio() {};
     // getters
-    //se maneja diferente
+     // Retorna la descripción del servicio
     string getDescripcion() const {
         return descripcion;
     }
+    // Registra un nuevo tiquete solicitado para este servicio y retorna su prioridad.
     int agregar() {
         tiquetesSolicitados++;
         return prioridad;
     }
+    // Retorna el código del área donde se atiende este servicio
     string getCodArea() {
         return codArea;
     }
+    // Reinicia el contador de tiquetes solicitados 
     void reiniciarTiquetes() {
         tiquetesSolicitados = 0;            //agregado
     }
+    // Retorna la cantidad de tiquetes solicitados 
     int getTiquetesSol() {
         return tiquetesSolicitados;         //agregado
     }
