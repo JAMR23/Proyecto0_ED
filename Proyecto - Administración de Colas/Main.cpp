@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <clocale>
 #include "Pair.h"
 #include "HeapPriorityQueue.h"
 #include "Usuario.h"
@@ -27,14 +28,8 @@ using std::to_string;
 using std::exception;
 using std::runtime_error;
 
-
-int main1()
-{
-    cout << "Fuera de servivio...\n";
-    return 0;
-}
-
 int main() {
+    setlocale(LC_ALL, "spanish");
     //Inicializar y definir las listas y variables.
     LinkedList<Usuario*>* usuarios = new LinkedList<Usuario*>();
     LinkedList<Servicio*>* servicios = new LinkedList<Servicio*>();
@@ -45,9 +40,6 @@ int main() {
     string x;
     bool c = true;
     while (c) {
-        for (int i = 0; i < 50; ++i) {
-            cout << endl;
-        }
         cout << ".*:''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''':*." << endl;
         cout << ": :    _____     __                      __                     : :" << endl;
         cout << ": :   / __(_)__ / /____ __ _  ___ _  ___/ /__                   : :" << endl;
@@ -96,8 +88,9 @@ int main() {
                 }
                 cout << "Presione Enter para volver al menú principal...";
                 cin.ignore(1000, '\n');
-                cin.get();
-                cin.ignore(1000, '\n');
+                for (int i = 0; i < 50; ++i) {
+                    cout << endl;
+                }
                 break;
             case 2:
                 do {
@@ -135,10 +128,11 @@ int main() {
                                 areas->getElement()->agregarTiquete(t);
                         }
                         cout << "Tiquete " << t << " agregado." << endl
-                            << "Presione enter para volver al menú principal...";
+                            << "Presione Enter para volver al menú principal...";
                         cin.ignore(1000, '\n');
-                        cin.get();
-                        cin.ignore(1000, '\n');
+                        for (int i = 0; i < 50; ++i) {
+                            cout << endl;
+                        }
                     }
                     else if (opt == "2")
                         ; 
@@ -174,10 +168,11 @@ int main() {
                     tiempoTotalTiquetes += t->tiempoEspera();
                     totalTiquetesAtendidos++;
                 }
-                cout << "Tiquete atendido." << endl << "Presione enter para volver al menú principal...";
+                cout << "Tiquete atendido." << endl << "Presione Enter para volver al menú principal...";
                 cin.ignore(1000, '\n');
-                cin.get();
-                cin.ignore(1000, '\n');
+                for (int i = 0; i < 50; ++i) {
+                    cout << endl;
+                }
                 break;
             case 4:
                 do {
@@ -461,10 +456,11 @@ int main() {
                         << usuarios->getElement()->getTiquetesEmitidos() << " tiquetes. " << endl;
                     usuarios->next();
                 }
-                cout << "Presione enter para volver al menú principal...";
+                cout << "Presione Enter para volver al menú principal...";
                 cin.ignore(1000, '\n');
-                cin.get();
-                cin.ignore(1000, '\n');
+                for (int i = 0; i < 50; ++i) {
+                    cout << endl;
+                }
                 break;
             case 6:
                 cout << "Cerrando el programa... ";
@@ -477,8 +473,17 @@ int main() {
             }
         }
         //Faltan catch especificos
+        catch (const std::invalid_argument) {
+            for (int i = 0; i < 50; ++i) {
+                cout << endl;
+            }
+            cout << "ERROR: Opción no valida." << endl << endl;
+        }
         catch (const exception& e) {
-            cout << "ERROR: " << e.what() << endl;
+            for (int i = 0; i < 50; ++i) {
+                cout << endl;
+            }
+            cout <<  e.what() << endl << endl;
         }
     }
     return 0;
