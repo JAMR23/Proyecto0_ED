@@ -144,8 +144,9 @@ int main() {
                             for (int i = 0; i < areas->getSize(); i++) {
                                 if (areas->getElement()->getCodigo() == cod)
                                     areas->getElement()->agregarTiquete(t);
+				                areas->next();
                             }
-                            cout << "Tiquete " << t->codigo << " agregado." << endl;
+                            cout << "Tiquete " << t << " agregado." << endl;
                            
                         }
                         else if (opt == "2")
@@ -254,8 +255,9 @@ int main() {
                                     }
                                     getline(cin, x);
                                     usuarios->goToPos(stoi(x) - 1);
-                                    cout << "Usuario " << usuarios->remove()->getNombre()
-                                        << " eliminado." << endl << endl;
+				                    Usuario* u = usuarios->remove();
+                                    cout << "Usuario " << u->getNombre() << " eliminado." << endl << endl;	
+				                    delete u;
                                 }
                             }
                             else if (opt == "3")
@@ -312,7 +314,7 @@ int main() {
                                     }
                                     //Borrar la lista de ventanillas del area, asignarle v y asignnar x a la cantVentanillas
                                     areas->getElement()->delVentanillas();
-                                    areas->getElement()->asignVentanillas(v, stoi(x));
+                                    areas->getElement()->asignVentanillas(stoi(x));
                                     cout << "Ventanillas modificadas." << endl << endl;
                                 }
                                 
@@ -336,6 +338,7 @@ int main() {
                                     for (int i = 0; i < servicios->getSize(); i++) {
                                         if (servicios->getElement()->getCodArea() == areas->getElement()->getCodigo()) {
                                             cout << servicios->getElement()->getDescripcion() << endl;
+					                        servicios->next();
                                         }
                                     }
                                     cout << "Desea continuar?(s/n): ";
@@ -346,19 +349,19 @@ int main() {
                                             servicios->goToStart();
                                             for (int i = 0; i < servicios->getSize(); i++) {
                                                 if (servicios->getElement()->getCodArea() == areas->getElement()->getCodigo()) {
-                                                    servicios->remove();
+                                                    delete servicios->remove();	
                                                 }
+						                        servicios->next();
                                             }
-                                            cout << "Area " << areas->remove()->getDescripcion() << " eliminada." << endl << endl;
                                         }
-                                        else {
-                                            cout << "Area " << areas->remove()->getDescripcion() << " eliminada." << endl << endl;
-                                        }
+                                        Area* a = areas->remove();
+                                        cout << "Area " << a->getDescripcion() << " eliminada." << endl << endl; 
+                                        delete a;
                                     }
                                     else
                                         cout << "Cancelando..." << endl << endl;
                                 }
-                                
+                                 
                             }
                             else if (opt == "4")
                                 cout << endl;
@@ -406,7 +409,7 @@ int main() {
                                     servicios->goToStart();
                                     cout << "Elija un servicio a eliminar:" << endl;
                                     for (int i = 0; i < servicios->getSize(); i++) {
-                                        cout << i + 1 << ". " << servicios->getElement()->getDescripcion();
+                                        cout << i + 1 << ". " << servicios->getElement()->getDescripcion() << endl;
                                         servicios->next();
                                     }
                                     getline(cin, x);
@@ -415,8 +418,11 @@ int main() {
                                     for (int i = 0; i < areas->getSize(); i++) {
                                         if (areas->getElement()->getCodigo() == servicios->getElement()->getCodArea())
                                             areas->getElement()->limpiarCola();
+					                    areas->next();
                                     }
-                                    cout << "Servicio " << servicios->remove()->getDescripcion() << " y tiquetes de su area, eliminados." << endl << endl;
+                                    Servicio* s = servicios->remove();
+                                    cout << "Servicio " << s->getDescripcion() << " y tiquetes de su area, eliminados." << endl << endl;
+                                    delete s;
                                 }
                             }
                             else if (opt == "3") {
@@ -427,7 +433,7 @@ int main() {
                                     servicios->goToStart();
                                     cout << "Elija un servicio a mover:" << endl;
                                     for (int i = 0; i < servicios->getSize(); i++) {
-                                        cout << i + 1 << ". " << servicios->getElement()->getDescripcion();
+                                        cout << i + 1 << ". " << servicios->getElement()->getDescripcion() << endl;
                                         servicios->next();
                                     }
                                     getline(cin, x);
@@ -540,6 +546,9 @@ int main() {
                 break;
             case 6:
                 cout << "Cerrando el programa... ";
+                delete usuarios;
+                delete servicios;
+                delete areas;
                 c = false;
                 cout << "Adios.";
                 break;
@@ -550,6 +559,7 @@ int main() {
                 cout << "ERROR: Opción no valida." << endl << endl;
                 break;
             }
+            
         }
         //Faltan catch especificos
         catch (const std::invalid_argument) {
