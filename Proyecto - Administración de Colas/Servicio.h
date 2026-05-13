@@ -1,7 +1,7 @@
 // Autor: Jessica Vargas
 // Fecha: 07/05/2026
 // Descripcion: Un servicio disponible en el sistema de administracion de colas. 
- 
+
 #pragma once
 
 #include <stdexcept>
@@ -17,9 +17,9 @@ using std::runtime_error;
 class Servicio {
 private:
     string descripcion;
-    int prioridad;
+    int prioridad; // 
     string codArea;
-    int tiquetesSolicitados; 
+    int tiquetesSolicitados; //agregado
 
 public:
     // Constructor: inicializa el servicio con su descripción, prioridad y código de área.
@@ -32,7 +32,7 @@ public:
     }
     ~Servicio() {};
     // getters
-    // Retorna la descripción del servicio
+     // Retorna la descripción del servicio
     string getDescripcion() const {
         return descripcion;
     }
@@ -47,11 +47,11 @@ public:
     }
     // Reinicia el contador de tiquetes solicitados 
     void reiniciarTiquetes() {
-        tiquetesSolicitados = 0;
+        tiquetesSolicitados = 0;            //agregado
     }
-    // Retorna la cantidad de tiquetes solicitados
+    // Retorna la cantidad de tiquetes solicitados 
     int getTiquetesSol() {
-        return tiquetesSolicitados;
+        return tiquetesSolicitados;         //agregado
     }
     // Para imprimir
     friend ostream& operator<<(ostream& os, const Servicio& s) {

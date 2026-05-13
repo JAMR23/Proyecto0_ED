@@ -1,3 +1,9 @@
+// Autor: Mauricio Avilés
+// Fecha: 12/05/2026
+// Descripcion: Estructura generica que agrupa un par (key, value) de tipos distintos.
+//				Agrupa un elemento y su prioridad en una sola unidad.
+
+
 #pragma once
 
 #include <iostream>
@@ -36,7 +42,7 @@ public:
 	bool operator>=(const Pair<K, V>& other) {
 		return key >= other.key;
 	}
-	friend ostream& operator <<(ostream& os, const Pair<K, V>& p) { //Imprime solo el valor (para no imprimir prioridad)
+	friend ostream& operator <<(ostream& os, const Pair<K, V>& p) { 
 		os << "(" << p.key << ", " << p.value << ")";
 		return os;
 	}

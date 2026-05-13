@@ -5,7 +5,6 @@
 
 #pragma once
 #include <string>
-#include <algorithm>
 #include "HeapPriorityQueue.h"
 #include "Tiquete.h"
 #include "Ventanilla.h"
@@ -42,7 +41,7 @@ public:
 	~Area() {
 		delVentanillas();
 		while (!colaVacia()) {
-			Tiquete* t = cola.removeMin(); 
+			Tiquete* t = cola.removeMin();
 			delete t;
 		}
 	}
@@ -54,8 +53,9 @@ public:
 
 	//Extrae el tiquete con mayor prioridad (menor número)
 	Tiquete* extraerTiquete() {
+		Tiquete* t = cola.removeMin();
 		tiquetesDispensados++;
-		return cola.removeMin();
+		return t;
 	}
 
 	//Revisa si la cola está vacía
@@ -65,42 +65,16 @@ public:
 
 	//Libera memoria de ventanillas
 	void delVentanillas() {
-		for (int i = 0; i < cantidadVentanillas; i++) {
+		for (int i = 0; i < cantidadVentanillas; i++)
 			delete ventanillas[i];
-		}
 		delete[] ventanillas;						
-		ventanillas = nullptr;
 		cantidadVentanillas = 0;
 	}
-
-	//Asigna un nuevo arreglo de ventanillas 
-	void asignVentanillas(int nuevaCant) {
-		Ventanilla** nuevasVent = new Ventanilla*[nuevaCant];
-		int menor = std::min(nuevaCant, cantidadVentanillas);
-
-		//Apuntar a cada elemento del arreglo anterior con cada uno del nuevo
-		for (int i = 0; i < menor; ++i) {
-			nuevasVent[i] = ventanillas[i];
-			ventanillas[i] = nullptr; // evitar doble borrado
-		}
-		//Si nuevaCant es mayor, crear nuevas ventanillas
-		for (int i = menor; i < nuevaCant; ++i) {
-			string nombreVentanilla = codigo + to_string(i + 1);
-			nuevasVent[i] = new Ventanilla(nombreVentanilla);
-		}
-		//Si es menor, borrar las ventanillas extra
-		for (int i = nuevaCant; i < cantidadVentanillas; ++i) {
-			if (ventanillas[i]) {
-				delete ventanillas[i];
-				ventanillas[i] = nullptr;
-			}
-		}
-		//Borrar arreglo anterior
-		delete[] ventanillas;
-		ventanillas = nuevasVent;
-		cantidadVentanillas = nuevaCant;
+	//Asigna un nuevo arreglo de ventanillas
+	void asignVentanillas(Ventanilla** v, int cVent) {
+		ventanillas = v;
+		cantidadVentanillas = cVent;				
 	}
-
 	//Limpia la cola
 	void limpiarCola() {
 		cola.clear();								

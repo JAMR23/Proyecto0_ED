@@ -1,3 +1,8 @@
+// Autor: Mauricio Avilés, Jose Marín
+// Fecha: 12/05/2026
+// Descripcion: Cola de prioridad implementada sobre un MinHeap. Almacena cada elemento
+//              junto a su prioridad en un Pair<int, E>. 
+
 #pragma once
 #include <iostream>
 #include "PriorityQueue.h"

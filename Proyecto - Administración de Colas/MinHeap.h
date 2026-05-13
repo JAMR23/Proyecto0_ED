@@ -1,3 +1,9 @@
+// Autor: Mauricio Avilés
+// Fecha: 12/05/2026
+// Descripcion:
+//              Arbol binario donde el elemento de menor valor siempre
+//              esta en la raiz. Insert aplica sift-up y removeFirst aplica sift-down,
+
 #pragma once
 
 #include <stdexcept>
