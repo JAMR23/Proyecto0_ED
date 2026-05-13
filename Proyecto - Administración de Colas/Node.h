@@ -1,3 +1,8 @@
+// Autor: Mauricio Avilés
+// Fecha: 12/05/2026
+// Descripción: Representa un nodo individual en una lista
+//				enlazada.
+
 #pragma once
 
 template <typename E>

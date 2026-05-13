@@ -1,3 +1,9 @@
+// Autor: Mauricio Avilés
+// Fecha: 12/05/2026
+// Descripción: Clase abstracta que define el contrato que deben
+//				cumplir las listas implementadas, contiene métodos
+//				de operaciones básicas sobre una lista normal.
+
 #pragma once
 
 template <typename E>

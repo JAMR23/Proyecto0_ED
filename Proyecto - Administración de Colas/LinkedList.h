@@ -1,3 +1,8 @@
+// Autor: Mauricio Avilés
+// Fecha: 12/05/2026
+// Descripción: Implementacion de una lista enlazada simple
+//				usando nodos, deriva de la lista.
+
 #pragma once
 #include <stdexcept>
 #include <iostream>
@@ -79,7 +84,7 @@ public:
 		current = tail;
 	}
 	void goToPos(int pos) {
-		if (pos > size or pos <= 0)
+		if (pos > size or pos < 0)
 			throw runtime_error("ERROR: Index out of bounds.");
 		current = head;
 		for (int i = 0; i != pos; i++) {
